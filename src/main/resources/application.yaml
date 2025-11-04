@@ -1,0 +1,35 @@
+server:
+  port: ${SERVER_PORT:8080}
+spring:
+  application:
+    name: cat.food.check
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      auto-startup: ${KAFKA_CONSUMER_AUTO_START:true}
+      group-id: ${CONSUMER_GROUP_ID:cat}
+      auto-offset-reset: ${CONSUMER_AUTO_OFFSET_RESET:latest}
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      enable-auto-commit: false
+      properties:
+        spring.json.trusted.packages: "*"
+    listener:
+      ack-mode: MANUAL_IMMEDIATE
+
+kafka:
+  topic:
+    cat:
+      food-eaten:
+        name: ${KAFKA_TOPIC_CAT_FOOD_CHECK_FOOD_EATEN:cat.food.check.food-eaten}
+        auto-startup: ${KAFKA_TOPIC_CAT_FOOD_CHECK_FOOD_EATEN_AUTO_START:${spring.kafka.consumer.auto-startup}}
+    master:
+      create-report: ${KAFKA_TOPIC_CAT_FOOD_CHECK_CREATE_REPORT:master.create-report}
+
+cat-food-check:
+  food-norm:
+    felix: ${CAT_FOOD_CHECK_FELIX_FOOD_NORM:30}
+    kira: ${CAT_FOOD_CHECK_FELIX_FOOD_NORM:25}
